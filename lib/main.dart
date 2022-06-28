@@ -35,12 +35,72 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('豆瓣'),
       ),
       body: Center(
-        child: RateWidget(currentRate: 8.0),
+        child: Column(
+          children: [
+            RateWidget(currentRate: 8.0),
+            Container(
+              width: 200,
+              height: 50,
+              child: DashedLineWidget(
+                dashedWidth: 8,
+                dashedHeight: 2,
+                color: Colors.black54,
+              ),
+            ),
+            Container(
+              width: 100,
+              height: 200,
+              child: DashedLineWidget(
+                axis: Axis.vertical,
+                dashedWidth: 2,
+                dashedHeight: 8,
+                color: Colors.black54,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
+/**
+ * 虚线组件
+ */
+class DashedLineWidget extends StatelessWidget {
+  final Axis axis;
+  final double dashedWidth;
+  final double dashedHeight;
+  final int count;
+  final Color color;
+  DashedLineWidget(
+      {this.axis = Axis.horizontal,
+      this.dashedWidth = 5,
+      this.dashedHeight = 1,
+      this.count = 10,
+      this.color = const Color.fromRGBO(222, 222, 222, 1)});
+
+  @override
+  Widget build(BuildContext context) {
+    return Flex(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      direction: this.axis,
+      children: List.generate(this.count, (index) {
+        return SizedBox(
+          width: dashedWidth,
+          height: dashedHeight,
+          child: DecoratedBox(
+            decoration: BoxDecoration(color: color),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+/**
+ * 评分组件
+ */
 class RateWidget extends StatefulWidget {
   final double currentRate;
   final double maxRate;
@@ -51,17 +111,19 @@ class RateWidget extends StatefulWidget {
   final Widget normalIcon;
   final Widget selectedIcon;
 
-  RateWidget({
-    required this.currentRate,
-    this.maxRate = 10,
-    this.count = 5,
-    this.itemSize = 44,
-    this.normalColor = const Color.fromRGBO(237, 237, 237, 1),
-    this.selectedColor = Colors.red,
-    Widget? normalIcon,
-    Widget? selectedIcon
-  }): normalIcon = normalIcon ?? Icon(Icons.star, color: normalColor, size: itemSize),
-  selectedIcon = selectedIcon ?? Icon(Icons.star, color: selectedColor, size: itemSize);
+  RateWidget(
+      {required this.currentRate,
+      this.maxRate = 10,
+      this.count = 5,
+      this.itemSize = 44,
+      this.normalColor = const Color.fromRGBO(237, 237, 237, 1),
+      this.selectedColor = Colors.red,
+      Widget? normalIcon,
+      Widget? selectedIcon})
+      : normalIcon =
+            normalIcon ?? Icon(Icons.star, color: normalColor, size: itemSize),
+        selectedIcon = selectedIcon ??
+            Icon(Icons.star, color: selectedColor, size: itemSize);
 
   @override
   _RateWidgetState createState() => _RateWidgetState();
@@ -73,7 +135,7 @@ class _RateWidgetState extends State<RateWidget> {
     return Stack(
       children: [
         Row(mainAxisSize: MainAxisSize.min, children: buildNormalStars()),
-        Row(mainAxisSize: MainAxisSize.min,children: buildSelectedStars()),
+        Row(mainAxisSize: MainAxisSize.min, children: buildSelectedStars()),
       ],
     );
   }
@@ -86,7 +148,9 @@ class _RateWidgetState extends State<RateWidget> {
 
   List<Widget> buildSelectedStars() {
     // 计算
-    double rate = widget.currentRate <= widget.maxRate ? widget.currentRate : widget.maxRate;
+    double rate = widget.currentRate <= widget.maxRate
+        ? widget.currentRate
+        : widget.maxRate;
     double itemRate = widget.maxRate / widget.count;
     int rateCount = (widget.currentRate / itemRate).floor();
 
