@@ -11,18 +11,6 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
-        },
-        {
-            "name": "Flutter",
-            "program": "lib/main.dart",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "Douban",
-            "program": "lib/douban/main.dart",
-            "request": "launch",
-            "type": "dart"
         }
     ]
 }
