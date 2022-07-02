@@ -16,34 +16,32 @@ class HomeIndexPage extends StatelessWidget {
   }
 }
 
-class HomeIndexContent extends StatefulWidget {
-  const HomeIndexContent({Key? key}) : super(key: key);
-
-  @override
-  _HomeIndexContentState createState() => _HomeIndexContentState();
-}
-
-class _HomeIndexContentState extends State<HomeIndexContent> {
-  List<MovieModel> movies = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    HomeNetwork.movies().then((value) {
-      setState(() {
-        movies = value;
-      });
-    });
-  }
-
+class HomeIndexContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.only(bottom: 12),
-      itemCount: movies.length,
-      itemBuilder: (ctx, index) {
-        return HomeIndexListItemWidget(movie: movies[index]);
+    return FutureBuilder<List<MovieModel>>(
+      future: HomeNetwork.movies(),
+      builder: (ctx, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: RefreshProgressIndicator());
+        }
+
+        final movies = snapshot.data;
+        if (movies == null) {
+          return Center(
+            child: Text(
+              '暂无数据',
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+          );
+        }
+        return ListView.builder(
+          padding: EdgeInsets.only(bottom: 12),
+          itemCount: movies.length,
+          itemBuilder: (ctx, index) {
+            return HomeIndexListItemWidget(movie: movies[index]);
+          },
+        );
       },
     );
   }

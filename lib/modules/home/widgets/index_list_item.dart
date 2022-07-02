@@ -58,13 +58,14 @@ class HomeIndexListItemWidget extends StatelessWidget {
       ));
     }
     widgets.add(Expanded(
-        child: Text(
-      movie.title,
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 18,
-          overflow: TextOverflow.ellipsis),
-    )));
+      child: Text(
+        movie.title,
+        style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+            overflow: TextOverflow.ellipsis),
+      ),
+    ));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
